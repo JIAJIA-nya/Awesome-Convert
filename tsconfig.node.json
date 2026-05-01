@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "outDir": "dist-electron",
+    "rootDir": "electron",
+    "declaration": false,
+    "moduleResolution": "node"
+  },
+  "include": ["electron/**/*", "src/types/auto-launch.d.ts"]
+}

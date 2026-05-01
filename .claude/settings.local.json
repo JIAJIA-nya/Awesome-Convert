@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vite *)",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const m = require\\('@electron-toolkit/utils'\\); console.log\\(Object.keys\\(m\\)\\)\")"
+    ]
+  }
+}
