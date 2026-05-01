@@ -287,3 +287,72 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-size: 12px;
   line-height: 1.6;
 }
+
+/* Announcement content — 保证亮色/暗色模式下都清晰 */
+.announcement-content h1,
+.announcement-content h2,
+.announcement-content h3 {
+  color: var(--color-text);
+  font-weight: 600;
+  margin: 0.8em 0 0.4em;
+}
+.announcement-content h1 { font-size: 1.3em; }
+.announcement-content h2 { font-size: 1.15em; }
+.announcement-content h3 { font-size: 1.05em; }
+.announcement-content p {
+  margin: 0.5em 0;
+  color: var(--color-text-secondary);
+}
+.announcement-content a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+.announcement-content strong, .announcement-content b {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.announcement-content em, .announcement-content i {
+  color: var(--color-text-secondary);
+}
+.announcement-content ul, .announcement-content ol {
+  padding-left: 1.5em;
+  margin: 0.4em 0;
+  color: var(--color-text-secondary);
+}
+.announcement-content li { margin: 0.2em 0; }
+.announcement-content code {
+  background: var(--color-surface);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--color-primary);
+}
+.announcement-content pre {
+  background: var(--color-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.8em 1em;
+  overflow-x: auto;
+  margin: 0.6em 0;
+}
+.announcement-content pre code {
+  background: none;
+  padding: 0;
+  color: var(--color-text);
+}
+.announcement-content blockquote {
+  border-left: 3px solid var(--color-primary);
+  padding-left: 1em;
+  margin: 0.6em 0;
+  color: var(--color-text-muted);
+}
+.announcement-content img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin: 0.5em 0;
+}
+.announcement-content hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 1em 0;
+}

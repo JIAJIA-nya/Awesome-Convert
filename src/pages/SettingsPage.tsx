@@ -4,8 +4,10 @@ import {
   Palette, MousePointerClick, Power, Bell, Settings as SettingsIcon, RefreshCw,
   Wrench, Check, Sun, Moon, Download, Upload, Sparkles
 } from 'lucide-react'
+import { marked } from 'marked'
 import { useTheme, ANIMATION_PRESETS } from '../contexts/ThemeContext'
 import UpdateNotification from '../components/UpdateNotification'
+import AnnouncementModal from '../components/AnnouncementModal'
 
 type Section = 'appearance' | 'contextMenu' | 'startup' | 'announcements' | 'conversion' | 'update' | 'advanced'
 
@@ -55,6 +57,7 @@ export default function SettingsPage() {
   const [vBitrate, setVBitrate] = useState('1500k')
   const [vRes, setVRes] = useState('1920x1080')
   const [compLvl, setCompLvl] = useState(6)
+  const [annModal, setAnnModal] = useState<{ show: boolean; content: string; title?: string }>({ show: false, content: '' })
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -108,6 +111,7 @@ export default function SettingsPage() {
   }
 
   return (
+    <>
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex-1 flex overflow-hidden">
       {/* ── sidebar ── */}
       <div className="w-48 shrink-0 border-r border-white/5 bg-bg-secondary/30 p-3 space-y-1">
@@ -317,8 +321,15 @@ export default function SettingsPage() {
               </Item>
               <Item label="手动检查" description="获取最新公告">
                 <button onClick={async () => {
-                  try { const r = await window.api.fetchAnnouncement(); alert(r.content ? '公告获取成功' : '暂无公告') }
-                  catch(e:any) { alert('失败: '+e.message) }
+                  try {
+                    const r = await window.api.fetchAnnouncement()
+                    if (r.content) {
+                      const html = await marked(r.content)
+                      setAnnModal({ show: true, content: html as string, title: r.title })
+                    } else {
+                      alert('暂无公告')
+                    }
+                  } catch(e:any) { alert('获取失败: '+e.message) }
                 }}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-surface hover:bg-surface-hover text-sm text-text-secondary transition-colors">
                   <Bell size={14} /> 检查公告
@@ -418,6 +429,16 @@ export default function SettingsPage() {
         </AnimatePresence>
       </div>
     </motion.div>
+
+    {/* 公告弹窗 — 手动检查时使用 */}
+    <AnnouncementModal
+      show={annModal.show}
+      content={annModal.content}
+      title={annModal.title}
+      onClose={() => setAnnModal(p => ({ ...p, show: false }))}
+      showDismiss={false}
+    />
+    </>
   )
 }
 

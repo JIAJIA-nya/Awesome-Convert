@@ -15,7 +15,6 @@ import { useTheme } from './contexts/ThemeContext'
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabId>('archive')
   const theme = useTheme()
-  const preset = theme.getPreset()
   const [announcement, setAnnouncement] = useState<{ show: boolean; content: string; title?: string }>({
     show: false, content: '',
   })
@@ -24,9 +23,9 @@ export default function App() {
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission()
     }
-    window.api.onAnnouncement((data) => {
-      const html = marked(data.content) as string
-      setAnnouncement({ show: true, content: html, title: data.title })
+    window.api.onAnnouncement(async (data) => {
+      const html = await marked(data.content)
+      setAnnouncement({ show: true, content: html as string, title: data.title })
     })
     window.api.onUpdateAvailable(() => {})
   }, [])
@@ -44,19 +43,13 @@ export default function App() {
 
   return (
     <div className="flex flex-col h-full bg-bg">
-      {/* Background gradient — driven by theme */}
-      <div
-        className="fixed inset-0 pointer-events-none transition-all duration-700"
-        style={{ background: 'var(--bg-gradient)' }}
-      />
+      <div className="fixed inset-0 pointer-events-none transition-all duration-700"
+        style={{ background: 'var(--bg-gradient)' }} />
 
       <div className="relative flex flex-col h-full">
         <Titlebar />
         <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
-
-        <AnimatePresence mode="wait">
-          {renderPage()}
-        </AnimatePresence>
+        <AnimatePresence mode="wait">{renderPage()}</AnimatePresence>
       </div>
 
       <AnnouncementModal
@@ -64,7 +57,7 @@ export default function App() {
         content={announcement.content}
         title={announcement.title}
         onClose={() => setAnnouncement(p => ({ ...p, show: false }))}
-        onDismiss={() => { setAnnouncement(p => ({ ...p, show: false })); window.api.setStore('announcementDismissed', true) }}
+        showDismiss={false}
       />
     </div>
   )
