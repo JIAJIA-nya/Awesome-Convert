@@ -6,7 +6,7 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
-![Version](https://img.shields.io/badge/version-1.0.0-green)
+![Version](https://img.shields.io/badge/version-2.0.2-green)
 
 [下载](https://github.com/JIAJIA-nya/Awesome-Convert/releases) · [功能特性](#功能特性) · [安装使用](#安装使用) · [构建指南](#构建指南)
 
@@ -82,6 +82,7 @@
 
 ### 其他
 
+- **最小化到托盘** — 关闭窗口不退出，常驻系统托盘，双击托盘图标恢复窗口
 - **开机自启** — 后台静默运行，托盘图标
 - **命令行模式** — `app.exe --cli --input file.mp4 --to mkv`，无窗口转换
 - **转换偏好** — 视频码率 / 分辨率 / 压缩级别 / 输出目录规则
@@ -137,8 +138,8 @@ npx electron-builder --linux --x64   # Linux
 本项目包含 `.github/workflows/build.yml`，推送 tag 即可自动构建全平台并发布：
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v2.0.2
+git push origin v2.0.2
 ```
 
 GitHub Actions 会在 Windows / macOS / Linux 三个平台构建，自动创建 Release 并上传所有安装包。
