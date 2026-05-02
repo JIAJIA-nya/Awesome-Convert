@@ -1,6 +1,6 @@
 {
   "name": "awesome-convert",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "description": "万能文件格式转换工具 - 纯本地运行，支持压缩包、视频、音频、图片、文档等格式互转",
   "main": "dist-electron/main/index.js",
   "author": {

@@ -1,5 +1,6 @@
 import { app, BrowserWindow, shell, ipcMain, nativeTheme } from 'electron'
 import { join } from 'path'
+import { existsSync } from 'fs'
 
 const is = { dev: !app.isPackaged }
 const appPath = app.getAppPath()
@@ -15,13 +16,28 @@ import { parseArgs } from './cli'
 
 let mainWindow: BrowserWindow | null = null
 let progressWindow: BrowserWindow | null = null
+let isQuitting = false
 const store = new Store()
+
+function getIconPath(): string {
+  const candidates = [
+    join(appPath, 'build/icon.png'),
+    join(__dirname, '../../build/icon.png'),
+    join(__dirname, '../../../build/icon.png'),
+    join(appPath, 'resources/icon.png'),
+  ]
+  for (const p of candidates) {
+    if (existsSync(p)) return p
+  }
+  return candidates[0]
+}
 
 export function getMainWindow() { return mainWindow }
 export function getProgressWindow() { return progressWindow }
 export function getStore() { return store }
 
 function createMainWindow(): BrowserWindow {
+  const iconPath = getIconPath()
   const win = new BrowserWindow({
     width: 1100,
     height: 720,
@@ -31,6 +47,7 @@ function createMainWindow(): BrowserWindow {
     frame: false,
     titleBarStyle: 'hidden',
     backgroundColor: '#0f0f1a',
+    icon: iconPath,
     webPreferences: {
       preload: preloadPath,
       nodeIntegration: false,
@@ -40,6 +57,15 @@ function createMainWindow(): BrowserWindow {
 
   win.on('ready-to-show', () => {
     win.show()
+    win.focus()
+  })
+
+  // Close → hide to tray instead of quitting
+  win.on('close', (e) => {
+    if (!isQuitting) {
+      e.preventDefault()
+      win.hide()
+    }
   })
 
   win.webContents.setWindowOpenHandler(({ url }) => {
@@ -65,6 +91,7 @@ function createProgressWindow(): BrowserWindow {
     alwaysOnTop: true,
     skipTaskbar: true,
     resizable: false,
+    icon: getIconPath(),
     webPreferences: {
       preload: preloadPath,
       nodeIntegration: false,
@@ -116,16 +143,13 @@ app.whenReady().then(async () => {
   // Announcements
   setupAnnouncements(mainWindow, store)
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
 })
 
 app.on('window-all-closed', () => {
-  unregisterContextMenu()
-  app.quit()
+  // Don't quit — app stays in tray
 })
 
 app.on('before-quit', () => {
+  isQuitting = true
   unregisterContextMenu()
 })

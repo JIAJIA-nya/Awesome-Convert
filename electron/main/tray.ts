@@ -6,21 +6,26 @@ import { Store } from './store'
 let tray: Tray | null = null
 
 function getIconPath(): string {
-  const paths = [
+  const appPath = app.getAppPath()
+  const candidates = [
+    join(appPath, 'build/icon.png'),
     join(__dirname, '../../build/icon.png'),
     join(__dirname, '../../../build/icon.png'),
-    join(app.getAppPath(), 'build/icon.png'),
+    join(appPath, 'resources/icon.png'),
   ]
-  for (const p of paths) {
+  for (const p of candidates) {
     if (existsSync(p)) return p
   }
-  return paths[0]
+  return candidates[0]
 }
 
 export function setupTray(mainWindow: BrowserWindow, store: Store) {
   const iconPath = getIconPath()
   const icon = nativeImage.createFromPath(iconPath)
-  tray = new Tray(icon.resize({ width: 16, height: 16 }))
+  if (process.platform === 'darwin') {
+    icon.setTemplateImage(true)
+  }
+  tray = new Tray(icon)
   tray.setToolTip('Awesome-Convert')
 
   const contextMenu = Menu.buildFromTemplate([
